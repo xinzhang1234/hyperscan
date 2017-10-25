@@ -475,6 +475,11 @@ hs_error_t HS_CDECL hs_scan(const hs_database_t *db, const char *data,
                             hs_scratch_t *scratch, match_event_handler onEvent,
                             void *context);
 
+hs_error_t HS_CDECL hs_scan_my(const hs_database_t *db, const char *data,
+                            unsigned int length, unsigned int flags,
+                            hs_scratch_t *scratch, match_event_handler onEvent,
+                            void *context,const void *rose);
+
 /**
  * The vectored regular expression scanner.
  *

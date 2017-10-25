@@ -203,6 +203,9 @@ hs_error_t HS_CDECL hs_stream_size(const hs_database_t *database,
 hs_error_t HS_CDECL hs_database_size(const hs_database_t *database,
                                      size_t *database_size);
 
+hs_error_t HS_CDECL hs_get_bytecode_my(const struct hs_database *db, 
+                                    const void **rose);
+
 /**
  * Utility function for reporting the size that would be required by a
  * database if it were deserialized.

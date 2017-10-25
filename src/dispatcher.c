@@ -32,6 +32,7 @@
 #include "ue2common.h"
 #include "util/cpuid_flags.h"
 #include "util/join.h"
+#include "database.h"
 
 #if defined(DISABLE_AVX512_DISPATCH)
 #define avx512_ disabled_
@@ -76,8 +77,16 @@ CREATE_DISPATCH(hs_error_t, hs_scan, const hs_database_t *db, const char *data,
                 unsigned length, unsigned flags, hs_scratch_t *scratch,
                 match_event_handler onEvent, void *userCtx);
 
+CREATE_DISPATCH(hs_error_t, hs_scan_my, const hs_database_t *db, const char *data,
+                unsigned length, unsigned flags, hs_scratch_t *scratch,
+                match_event_handler onEvent, void *userCtx, const void* rose1);
+
+CREATE_DISPATCH(hs_error_t, hs_get_bytecode_my, const hs_database_t *database,
+   const void **rose);
+
 CREATE_DISPATCH(hs_error_t, hs_stream_size, const hs_database_t *database,
                 size_t *stream_size);
+
 
 CREATE_DISPATCH(hs_error_t, hs_database_size, const hs_database_t *db,
                 size_t *size);

@@ -32,6 +32,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 #include "allocator.h"
 #include "hs_compile.h" /* for HS_MODE_* flags */
@@ -312,6 +313,28 @@ void runSmallWriteEngine(const struct SmallWriteEngine *smwr,
     }
 }
 
+
+HS_PUBLIC_API
+hs_error_t HS_CDECL hs_scan_my(const hs_database_t *db, const char *data,
+                            unsigned length, unsigned flags,
+                            hs_scratch_t *scratch, match_event_handler onEvent,
+                            void *userCtx, const void* rose1) {
+
+    const struct RoseEngine* rose = (const struct RoseEngine*) rose1;
+    prefetch_data(data, length);
+
+    /* populate core info in scratch */
+    populateCoreInfo(scratch, rose, scratch->bstate, onEvent, userCtx, data,
+                     length, NULL, 0, 0, 0, flags);
+
+    clearEvec(rose, scratch->core_info.exhaustionVector);
+
+    rawBlockExec(rose, scratch);
+    unmarkScratchInUse(scratch);
+    return HS_SUCCESS;
+}
+
+
 HS_PUBLIC_API
 hs_error_t HS_CDECL hs_scan(const hs_database_t *db, const char *data,
                             unsigned length, unsigned flags,
@@ -325,7 +348,6 @@ hs_error_t HS_CDECL hs_scan(const hs_database_t *db, const char *data,
     if (unlikely(err != HS_SUCCESS)) {
         return err;
     }
-
     const struct RoseEngine *rose = hs_get_bytecode(db);
     if (unlikely(!ISALIGNED_16(rose))) {
         return HS_INVALID;
@@ -444,6 +466,7 @@ set_retval:
     unmarkScratchInUse(scratch);
     return rv;
 }
+
 
 static really_inline
 void maintainHistoryBuffer(const struct RoseEngine *rose, char *state,

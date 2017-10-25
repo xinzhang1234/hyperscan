@@ -289,6 +289,12 @@ hs_error_t HS_CDECL hs_deserialize_database(const char *bytes,
 }
 
 HS_PUBLIC_API
+hs_error_t HS_CDECL hs_get_bytecode_my(const struct hs_database *db, const void **rose) {
+  *rose = ((const char *)db + db->bytecode); 
+  return HS_SUCCESS;
+}
+
+HS_PUBLIC_API
 hs_error_t HS_CDECL hs_database_size(const hs_database_t *db, size_t *size) {
     if (!size) {
         return HS_INVALID;
